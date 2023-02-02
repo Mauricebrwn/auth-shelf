@@ -1,18 +1,21 @@
-import {useSelector, useDispatch} from 'redux-saga'
+import {useSelector, useDispatch} from 'react-redux'
 import react,{useState} from 'react'; 
 
 function ShelfForm() {
-   const distpatch = useDispatch();
-
+   const dispatch = useDispatch();
+   const user= useSelector ((store)=> store.user)
+const [newDescription, setNewDescription] = useState('')
+const [newImage, setNewImage] = useState('')
+const [newId, setNewInput] = useState('')
   const addToShelf = (event)=>{
     event.preventDefault();
     let newItem ={
         description: description,
         image: image_url,
-        userId: user_id
+        user_id: user.id
     }
 console.log('this is newItem',newItem);
-    distpatch({
+    dispatch({
         type:'NEW_ITEM_TO_POST' ,
         payload: newItem
     })
@@ -21,7 +24,8 @@ console.log('this is newItem',newItem);
     return(
         <>
         <form onSubmit={addToShelf}> 
-            <input text="text" name="name" type="submit" value="submit" placeholder='enter item name'/>
+            <input  type="text" value={newDescription} onChange= {e=>setNewDescription(e.target.value)} placeholder='description'/>
+            <input  type="text" value={newImage} onChange= {e=>setNewImage(e.target.value)}placeholder='Image URL'/>
             <button> click here to add</button>
         </form>
         </>
