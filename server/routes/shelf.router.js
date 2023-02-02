@@ -1,12 +1,22 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
+const {
+  rejectUnauthenticated,
+} = require('../modules/authentication-middleware');
 
 /**
  * Get all of the items on the shelf
  */
-router.get('/', (req, res) => {
-  res.sendStatus(200); // For testing only, can be removed
+router.get('/', rejectUnauthenticated, (req, res) => {
+  pool
+    .query(`
+    SELECT * FROM "item";` )
+    .then((results) => res.send(results.rows))
+    .catch((error) => {
+      console.log('Error making SELECT for shelf:', error);
+      res.sendStatus(500);
+    }); 
 });
 
 /**
@@ -37,7 +47,18 @@ router.post('/', (req, res) => {
  * Delete an item if it's something the logged in user added
  */
 router.delete('/:id', (req, res) => {
-  // endpoint functionality
+  const id = req.params.id
+  let sqlQuery = `
+  DELETE FROM "item"
+  WHERE id = $1;
+  `
+  const sqlVal = [id]
+  pool.query(sqlQuery, sqlVal)
+  .then((dbRes) => {res.sendStatus(200)})
+    .catch((error) => {
+      console.log('Error making DELETE for shelf:', error);
+      res.sendStatus(500);
+    }); 
 });
 
 /**
