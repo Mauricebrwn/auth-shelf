@@ -10,8 +10,8 @@ const [newId, setNewInput] = useState('')
   const addToShelf = (event)=>{
     event.preventDefault();
     let newItem ={
-        description: description,
-        image: image_url,
+        description: newDescription,
+        image: newImage,
         user_id: user.id
     }
 console.log('this is newItem',newItem);
@@ -19,6 +19,8 @@ console.log('this is newItem',newItem);
         type:'NEW_ITEM_TO_POST' ,
         payload: newItem
     })
+    setNewDescription(''),
+    setNewImage('')
   }
 
     return(

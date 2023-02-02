@@ -13,7 +13,24 @@ router.get('/', (req, res) => {
  * Add an item for the logged in user to the shelf
  */
 router.post('/', (req, res) => {
-  // endpoint functionality
+  const description = req.body.description
+  const user_id= req.body.user_id
+  const image = req.body.image
+  const sqlQuery =`
+  INSERT INTO "item"
+  ("description", "image_url", "user_id")
+  VALUES
+($1,$2,$3);
+  `
+  const sqlValues = [description, image, user_id]
+  pool.query(sqlQuery,sqlValues)
+  .then((dbres)=>{
+    res.sendStatus(201);
+
+  })
+  .catch((error)=>{
+    res.sendStatus(500);
+  })
 });
 
 /**
